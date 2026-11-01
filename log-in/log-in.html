@@ -1,121 +1,435 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#050705">
-  <title>CineIT | Your movie account</title>
+  <title>CineIT | Account Access</title>
+  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="1styles.css">
-  <script src="app.js" defer></script>
+  
+  <style>
+    /* =====================================
+       CINEIT THEME COLORS
+    ===================================== */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      color-scheme: dark;
+      --bg: #050705;
+      --panel: #0c100c;
+      --line: #263026;
+      --muted: #9aa497;
+      --green: #4be11d;
+      --deep: #006400;
+      --text: #f5f7f3;
+      --input-bg: #050705;
+      --topbar-bg: #070907;
+      --secondary-bg: #050805;
+      --card-gradient: linear-gradient(145deg, rgba(17, 22, 17, 0.8), rgba(9, 12, 9, 0.9));
+    }
+
+    [data-theme="light"] {
+      color-scheme: light;
+      --bg: #f3f6ef;
+      --panel: #ffffff;
+      --line: #dce5d6;
+      --muted: #687565;
+      --green: #258b13;
+      --deep: #267d16;
+      --text: #192218;
+      --input-bg: #f7f9f5;
+      --topbar-bg: #ffffff;
+      --secondary-bg: #edf2e9;
+      --card-gradient: linear-gradient(145deg, rgba(255, 255, 255, 0.8), rgba(242, 246, 239, 0.9));
+    }
+
+    /* =====================================
+       GENERAL
+    ===================================== */
+    body {
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Manrope, Arial, sans-serif;
+      transition: background .3s, color .3s;
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    a:hover {
+      color: var(--green);
+    }
+
+    /* =====================================
+       TOP NAVIGATION
+    ===================================== */
+    .topbar {
+      height: 76px;
+      padding: 0 clamp(22px, 7vw, 112px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--line);
+      background: var(--topbar-bg);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 21px;
+      font-weight: 800;
+      letter-spacing: -1px;
+    }
+
+    .logo > span:last-child {
+      line-height: 1;
+    }
+
+    .logo > span:last-child > span {
+      color: var(--green);
+    }
+
+    .logo-icon {
+      width: 31px;
+      height: 31px;
+      border: 2px solid var(--text);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      transform: rotate(-8deg);
+    }
+
+    .logo-icon i {
+      display: block;
+      width: 3px;
+      height: 13px;
+      background: var(--green);
+      border-radius: 3px;
+      transform: skew(-12deg);
+    }
+
+    .logo-icon i:nth-child(2) { height: 19px; }
+    .logo-icon i:nth-child(3) { height: 15px; }
+    .logo-icon i:nth-child(4) { height: 9px; }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .topbar-dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--green);
+    }
+
+    .theme-toggle {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 9px 12px;
+      background: var(--panel);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: .3s;
+      margin-left: 10px;
+    }
+
+    .theme-toggle:hover {
+      background: var(--secondary-bg);
+      border-color: var(--green);
+    }
+
+    /* =====================================
+       CONTAINER & CARD
+    ===================================== */
+    .login-container {
+      width: min(1200px, calc(100% - 48px));
+      margin: auto;
+      padding: 60px 0 100px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: calc(100vh - 76px);
+    }
+
+    .access-card {
+      width: 100%;
+      max-width: 480px;
+      background: var(--card-gradient);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, .15);
+    }
+
+    .card-header {
+      margin-bottom: 25px;
+    }
+
+    .card-header h2 {
+      font-size: 24px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      letter-spacing: -0.5px;
+    }
+
+    .card-header p {
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .tabs {
+      display: flex;
+      background: var(--secondary-bg);
+      border-radius: 10px;
+      padding: 5px;
+      margin-bottom: 25px;
+      border: 1px solid var(--line);
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .tab-btn.active {
+      background: var(--panel);
+      color: var(--green);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .auth-form {
+      display: none;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .auth-form.active {
+      display: flex;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .field label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .field input {
+      padding: 14px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: var(--input-bg);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .field input:focus {
+      border-color: var(--green);
+    }
+
+    .consent-field {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .consent-field input[type="checkbox"] {
+      accent-color: var(--green);
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+
+    .consent-field a {
+      color: var(--green);
+      text-decoration: underline;
+    }
+
+    .primary {
+      padding: 16px;
+      border: none;
+      border-radius: 8px;
+      background: var(--deep);
+      color: white;
+      font-family: inherit;
+      font-weight: 800;
+      font-size: 13px;
+      cursor: pointer;
+      transition: background 0.3s;
+      margin-top: 10px;
+    }
+
+    .primary:hover {
+      background: #078000;
+    }
+
+    .card-footer {
+      margin-top: 25px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+      text-align: center;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    @media (max-width: 600px) {
+      .topbar { padding: 0 20px; }
+      .topbar-right a { display: none; }
+      .topbar-dot { display: none; }
+      .access-card { padding: 25px; }
+    }
+  </style>
 </head>
 <body>
-  <header class="topbar">
-    <a class="logo" href="#" aria-label="CineIT home">
-      <span class="logo-icon" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
-      <span>Cine<span>IT</span><small>MAKING CINEMA ACCESSIBLE</small></span>
-    </a>
-    <div class="topbar-right">
-  <a href="#">Explore movies</a>
-  <span class="topbar-dot"></span>
-  <a href="#">Need help?</a>
 
-  <button type="button" id="themeToggle" class="theme-toggle">
-    ☀️ Light Mode
-  </button>
-</div>
-  </header>
+  <!-- Top Navigation (Relative links pointing out of /log-in/ folder) -->
+<header class="topbar">
+  <a class="logo" href="../index.html">
+    <span class="logo-icon" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+    <span>Cine<span>IT</span></span>
+  </a>
+  <div class="topbar-right">
+    <a href="../index.html">HOME</a>
+    <span class="topbar-dot"></span>
+    <a href="../cinemas.html">CINEMAS</a>
+    <span class="topbar-dot"></span>
+    <a href="../index.html#now-showing">FILMS</a>
+    <span class="topbar-dot"></span>
+    <a href="log-in.html">Log In/Sign Up</a>
+    <button type="button" id="themeToggle" class="theme-toggle">☀️ Light Mode</button>
+  </div>
+</header>
 
-  <main class="main">
-    <section class="welcome">
-      <div class="film-tag"><span class="live-dot"></span> THE SHOW IS BETTER TOGETHER</div>
-      <h1>Make room for<br><em>movie moments.</em></h1>
-      <p>One account for your watchlist, bookings and cinema plans. Pick up where your next great night out begins.</p>
-      <div class="feature-row">
-        <div class="feature-symbol">▣</div>
-        <div><strong>Your plans, in one place</strong><small>Keep track of bookings and ticket details.</small></div>
+  <main class="login-container">
+    <div class="access-card">
+      <div class="card-header">
+        <h2>Account Access</h2>
+        <p>Book tickets, save preferences, and manage your watchlist.</p>
       </div>
-      <div class="feature-row">
-        <div class="feature-symbol">◷</div>
-        <div><strong>Less time organizing</strong><small>Find your details when you need them.</small></div>
-      </div>
-      <div class="reel-decoration" aria-hidden="true">
-        <div class="reel-card card-one"><span>01</span><b>TONIGHT</b></div>
-        <div class="reel-card card-two"><span>02</span><b>YOUR SEAT</b></div>
-        <div class="reel-card card-three"><span>03</span><b>THE MAGIC</b></div>
-      </div>
-      <div class="welcome-foot">CINEIT <span>•</span> FIND YOUR NEXT FAVORITE</div>
-    </section>
 
-    <section class="access-area" aria-label="Account access">
-      <div class="access-card">
-        <div class="card-topline"><span>ACCOUNT ACCESS</span><span class="secure"><b></b> SECURE CONNECTION</span></div>
-        <div class="form-intro">
-          <div class="mini-mark">O</div>
-          <h2 id="heading">Create your CineIT account</h2>
-          <p id="subheading">Sign up to keep your movie plans close at hand.</p>
+      <div class="tabs">
+        <button class="tab-btn active" data-target="signin">Sign In</button>
+        <button class="tab-btn" data-target="register">Create Account</button>
+      </div>
+
+      <!-- Sign In Form -->
+      <form class="auth-form active" id="signin">
+        <div class="field">
+          <label for="signin-email">Email Address</label>
+          <input type="email" id="signin-email" placeholder="name@email.com" required>
         </div>
-
-        <div class="mode-switch" role="tablist" aria-label="Choose account action">
-          <button type="button" class="mode" id="signin-mode" data-mode="login" role="tab" aria-selected="false">Sign in</button>
-          <button type="button" class="mode selected" id="register-mode" data-mode="signup" role="tab" aria-selected="true">Create account</button>
+        <div class="field">
+          <label for="signin-password">Password</label>
+          <input type="password" id="signin-password" placeholder="Enter your password" required>
         </div>
+        <button type="submit" class="primary">Sign In →</button>
+      </form>
 
-        <div class="message" id="message" role="status" aria-live="polite" hidden></div>
-
-        <form id="register-form" novalidate>
-          <div class="field">
-            <label for="full-name">Name</label>
-            <input id="full-name" name="name" type="text" autocomplete="name" placeholder="How should we call you?" required minlength="2">
-          </div>
-          <div class="field">
-            <label for="register-email">Email</label>
-            <input id="register-email" name="email" type="email" autocomplete="email" placeholder="name@email.com" required>
-          </div>
-          <div class="field">
-            <label for="register-password">Password <span>12+ characters</span></label>
-            <div class="input-action">
-              <input id="register-password" name="password" type="password" autocomplete="new-password" placeholder="Create a strong password" required minlength="12">
-              <button type="button" data-password="register-password">Show</button>
-            </div>
-          </div>
-          <div class="field">
-            <label for="repeat-password">Confirm password</label>
-            <div class="input-action">
-              <input id="repeat-password" name="confirmPassword" type="password" autocomplete="new-password" placeholder="Type it again" required>
-              <button type="button" data-password="repeat-password">Show</button>
-            </div>
-          </div>
-          <label class="consent"><input type="checkbox" name="terms" required><span>I agree to the <a href="#">Terms</a> and <a href="#">Privacy Policy</a>.</span></label>
-          <button class="primary" type="submit"><span>Create account</span><b>→</b></button>
-        </form>
-
-        <form id="signin-form" novalidate hidden>
-          <div class="field">
-            <label for="signin-email">Email</label>
-            <input id="signin-email" name="email" type="email" autocomplete="email" placeholder="name@email.com" required>
-          </div>
-          <div class="field">
-            <label for="signin-password">Password</label>
-            <div class="input-action">
-              <input id="signin-password" name="password" type="password" autocomplete="current-password" placeholder="Enter your password" required>
-              <button type="button" data-password="signin-password">Show</button>
-            </div>
-          </div>
-          <div class="forgot"><a href="#" id="forgot">Forgot password?</a></div>
-          <button class="primary" type="submit"><span>Sign in</span><b>→</b></button>
-        </form>
-
-        <div class="card-bottom">
-          <span class="bottom-line"></span>
-          <p id="switch-line">Already part of CineIT? <button type="button" data-mode="login">Sign in</button></p>
-          <small>Account access does not reserve a seat or complete payment.</small>
+      <!-- Register Form -->
+      <form class="auth-form" id="register">
+        <div class="field">
+          <label for="reg-name">Full Name</label>
+          <input type="text" id="reg-name" placeholder="John Doe" required>
         </div>
+        <div class="field">
+          <label for="reg-email">Email Address</label>
+          <input type="email" id="reg-email" placeholder="name@email.com" required>
+        </div>
+        <div class="field">
+          <label for="reg-password">Password</label>
+          <input type="password" id="reg-password" placeholder="Create a strong password" required>
+        </div>
+        <div class="consent-field">
+          <input type="checkbox" id="terms" required>
+          <label for="terms">I agree to the <a href="#">Terms</a> & <a href="#">Privacy Policy</a></label>
+        </div>
+        <button type="submit" class="primary">Create Account →</button>
+      </form>
+
+      <div class="card-footer">
+        <p>© 2026 CineIT · Cinema starts here</p>
       </div>
-      <div class="outside-note">© 2026 CineIT <span>·</span> Cinema starts here</div>
-    </section>
+    </div>
   </main>
+
+  <script>
+    const themeToggle = document.getElementById("themeToggle");
+    let currentTheme = localStorage.getItem("cineit-theme") || "dark";
+
+    function applyTheme() {
+      document.documentElement.setAttribute("data-theme", currentTheme);
+      themeToggle.textContent = currentTheme === "dark" ? "☀️ Light Mode" : "🌙 Dark Mode";
+    }
+
+    applyTheme();
+
+    themeToggle.addEventListener("click", () => {
+      currentTheme = currentTheme === "dark" ? "light" : "dark";
+      localStorage.setItem("cineit-theme", currentTheme);
+      applyTheme();
+    });
+
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const authForms = document.querySelectorAll('.auth-form');
+
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        tabBtns.forEach(b => b.classList.remove('active'));
+        authForms.forEach(f => f.classList.remove('active'));
+
+        btn.classList.add('active');
+        document.getElementById(btn.dataset.target).classList.add('active');
+      });
+    });
+  </script>
 </body>
 </html>

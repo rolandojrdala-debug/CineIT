@@ -1,7 +1,7 @@
 # CineIT Sprint 1 Test Plan and Acceptance Criteria
 
 Scope: Sprint Week 1 core deliverables — Login page (Sign In & Create Account), session handling, and theme toggle 
-Sources: Team brief, HOPE ERP Planned Tasks spreadsheet, log-in.html, and manual testing.
+Sources: Team brief, HOPE SMS Project spreadsheet, log-in.html, and manual testing.
 
 ## Approach
 - Manual testing in the browser, one criterion at a time.

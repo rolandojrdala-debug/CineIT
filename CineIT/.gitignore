@@ -1,0 +1,10 @@
+backend - Copy/
+testing.rar
+**/node_modules/
+**/.env
+**/.env.*
+!**/.env.example
+*.log
+.DS_Store
+
+backend/ca.pem

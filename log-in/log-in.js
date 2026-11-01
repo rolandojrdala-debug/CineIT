@@ -1,649 +1,101 @@
-// =====================================
-
-    // API CONFIGURATION
-
-    // =====================================
-
-
-
-    // Local backend address for development.
-
-    // Later, replace this with your Render backend URL.
-
-
-
-    const API_BASE_URL = "http://127.0.0.1:3000";
-
-
-
-
-
-    // =====================================
-
-    // THEME TOGGLE
-
-    // =====================================
-
-
-
-    const themeToggle = document.getElementById("themeToggle");
-
-
-
-    let currentTheme =
-
-      localStorage.getItem("cineit-theme") || "dark";
-
-
-
-    function applyTheme() {
-
-
-
-      document.documentElement.setAttribute(
-
-        "data-theme",
-
-        currentTheme
-
-      );
-
-
-
-      themeToggle.textContent =
-
-        currentTheme === "dark"
-
-          ? "☀️ Light Mode"
-
-          : "🌙 Dark Mode";
-
-
-
-    }
-
-
-
-    applyTheme();
-
-
-
-    themeToggle.addEventListener("click", () => {
-
-
-
-      currentTheme =
-
-        currentTheme === "dark" ? "light" : "dark";
-
-
-
-      localStorage.setItem("cineit-theme", currentTheme);
-
-
-
-      applyTheme();
-
-
-
-    });
-
-
-
-
-
-    // =====================================
-
-    // TAB SWITCHING
-
-    // =====================================
-
-
-
-    const tabBtns = document.querySelectorAll(".tab-btn");
-
-
-
-    const authForms = document.querySelectorAll(".auth-form");
-
-
-
-    const authMessage = document.getElementById("auth-message");
-
-
-
-    tabBtns.forEach(button => {
-
-
-
-      button.addEventListener("click", () => {
-
-
-
-        tabBtns.forEach(btn => {
-
-          btn.classList.remove("active");
-
-        });
-
-
-
-        authForms.forEach(form => {
-
-          form.classList.remove("active");
-
-        });
-
-
-
-        button.classList.add("active");
-
-
-
-        document
-
-          .getElementById(button.dataset.target)
-
-          .classList.add("active");
-
-
-
-        hideAuthMessage();
-
-
-
-      });
-
-
-
-    });
-
-
-
-
-
-    // =====================================
-
-    // MESSAGE HANDLING
-
-    // =====================================
-
-
-
-    function showAuthMessage(message, type = "error") {
-
-
-
-      authMessage.textContent = message;
-
-
-
-      authMessage.className = `auth-message ${type}`;
-
-
-
-    }
-
-
-
-    function hideAuthMessage() {
-
-
-
-      authMessage.textContent = "";
-
-
-
-      authMessage.className = "auth-message";
-
-
-
-    }
-
-
-
-
-
-    // =====================================
-
-    // API RESPONSE HANDLING
-
-    // =====================================
-
-
-
-    async function sendAuthRequest(endpoint, payload) {
-
-
-
-      const response = await fetch(
-
-        `${API_BASE_URL}${endpoint}`,
-
-        {
-
-          method: "POST",
-
-
-
-          headers: {
-
-            "Content-Type": "application/json"
-
-          },
-
-
-
-          credentials: "include",
-
-
-
-          body: JSON.stringify(payload)
-
-        }
-
-      );
-
-
-
-      const data = await response.json();
-
-
-
-      if (!response.ok) {
-
-
-
-        throw new Error(
-
-          data.message || "Something went wrong."
-
-        );
-
-
-
+// CineIT authentication using Supabase Auth.
+const supabaseClient = window.cineitSupabase;
+const themeToggle = document.getElementById("themeToggle");
+let currentTheme = localStorage.getItem("cineit-theme") || "dark";
+function applyTheme() {
+  document.documentElement.setAttribute("data-theme", currentTheme);
+  if (themeToggle) themeToggle.textContent = currentTheme === "dark" ? "☀️ Light Mode" : "🌙 Dark Mode";
+}
+applyTheme();
+themeToggle?.addEventListener("click", () => {
+  currentTheme = currentTheme === "dark" ? "light" : "dark";
+  localStorage.setItem("cineit-theme", currentTheme);
+  applyTheme();
+});
+
+const tabBtns = document.querySelectorAll(".tab-btn");
+const authForms = document.querySelectorAll(".auth-form");
+const authMessage = document.getElementById("auth-message");
+function showAuthMessage(message, type = "error") {
+  authMessage.textContent = message;
+  authMessage.className = `auth-message ${type}`;
+}
+function hideAuthMessage() {
+  authMessage.textContent = "";
+  authMessage.className = "auth-message";
+}
+tabBtns.forEach(button => button.addEventListener("click", () => {
+  tabBtns.forEach(btn => btn.classList.toggle("active", btn === button));
+  authForms.forEach(form => form.classList.toggle("active", form.id === button.dataset.target));
+  hideAuthMessage();
+}));
+function setBusy(button, busy, label) {
+  button.disabled = busy;
+  if (busy) button.dataset.originalText = button.textContent;
+  button.textContent = busy ? label : (button.dataset.originalText || label);
+}
+function homeUrl() { return new URL("../index.html", window.location.href).href; }
+
+// If an existing session is present, send the user back to the homepage.
+if (supabaseClient) {
+  supabaseClient.auth.getSession().then(({ data }) => {
+    if (data?.session) window.location.replace(homeUrl());
+  });
+} else {
+  showAuthMessage("Supabase could not be initialized. Check the configuration script.");
+}
+
+document.getElementById("signin").addEventListener("submit", async event => {
+  event.preventDefault();
+  hideAuthMessage();
+  const button = event.currentTarget.querySelector('button[type="submit"]');
+  const email = document.getElementById("signin-email").value.trim();
+  const password = document.getElementById("signin-password").value;
+  setBusy(button, true, "Signing in...");
+  try {
+    const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+    if (error) throw error;
+    showAuthMessage("Welcome back to CineIT! Redirecting...", "success");
+    window.location.assign(homeUrl());
+  } catch (error) {
+    showAuthMessage(error.message || "Unable to sign in. Please try again.");
+  } finally {
+    setBusy(button, false, "Sign In →");
+  }
+});
+
+document.getElementById("register").addEventListener("submit", async event => {
+  event.preventDefault();
+  hideAuthMessage();
+  const button = event.currentTarget.querySelector('button[type="submit"]');
+  const name = document.getElementById("reg-name").value.trim();
+  const email = document.getElementById("reg-email").value.trim();
+  const password = document.getElementById("reg-password").value;
+  const termsAccepted = document.getElementById("terms").checked;
+  if (name.length < 2 || name.length > 100) return showAuthMessage("Name must be between 2 and 100 characters.");
+  if (password.length < 12 || password.length > 128) return showAuthMessage("Password must contain between 12 and 128 characters.");
+  if (!termsAccepted) return showAuthMessage("Please accept the Terms and Privacy Policy.");
+  setBusy(button, true, "Creating account...");
+  try {
+    const { data, error } = await supabaseClient.auth.signUp({
+      email,
+      password,
+      options: {
+        data: { full_name: name },
+        emailRedirectTo: homeUrl()
       }
-
-
-
-      return data;
-
-
-
+    });
+    if (error) throw error;
+    if (data.session) {
+      showAuthMessage("Your CineIT account has been created! Redirecting...", "success");
+      window.location.assign(homeUrl());
+    } else {
+      showAuthMessage("Account created! Check your email to confirm your address before signing in.", "success");
+      document.getElementById("register").reset();
     }
-
-
-
-
-
-    // =====================================
-
-    // SIGN IN
-
-    // =====================================
-
-
-
-    document
-
-      .getElementById("signin")
-
-      .addEventListener("submit", async event => {
-
-
-
-        event.preventDefault();
-
-
-
-        hideAuthMessage();
-
-
-
-        const email = document
-
-          .getElementById("signin-email")
-
-          .value
-
-          .trim();
-
-
-
-        const password = document
-
-          .getElementById("signin-password")
-
-          .value;
-
-
-
-        const button = event.currentTarget.querySelector(
-
-          'button[type="submit"]'
-
-        );
-
-
-
-        button.disabled = true;
-
-
-
-        button.textContent = "Signing in...";
-
-
-
-        try {
-
-
-
-          const data = await sendAuthRequest(
-
-            "/api/auth/login",
-
-            {
-
-              email,
-
-              password
-
-            }
-
-          );
-
-
-
-          showAuthMessage(
-
-            data.message || "Welcome back to CineIT!",
-
-            "success"
-
-          );
-
-
-
-          // Redirect after successful login.
-
-
-
-          setTimeout(() => {
-
-
-
-            window.location.href = "../index.html";
-
-
-
-          }, 1000);
-
-
-
-        } catch (error) {
-
-
-
-          showAuthMessage(
-
-            error.message === "Failed to fetch"
-
-              ? "Cannot connect to CineIT server. Please try again later."
-
-              : error.message
-
-          );
-
-
-
-        } finally {
-
-
-
-          button.disabled = false;
-
-
-
-          button.textContent = "Sign In →";
-
-
-
-        }
-
-
-
-      });
-
-
-
-
-
-    // =====================================
-
-    // CREATE ACCOUNT / REGISTRATION
-
-    // =====================================
-
-
-
-    document
-
-      .getElementById("register")
-
-      .addEventListener("submit", async event => {
-
-
-
-        event.preventDefault();
-
-
-
-        hideAuthMessage();
-
-
-
-        const name = document
-
-          .getElementById("reg-name")
-
-          .value
-
-          .trim();
-
-
-
-        const email = document
-
-          .getElementById("reg-email")
-
-          .value
-
-          .trim();
-
-
-
-        const password = document
-
-          .getElementById("reg-password")
-
-          .value;
-
-
-
-        const termsAccepted = document
-
-          .getElementById("terms")
-
-          .checked;
-
-
-
-        const button = event.currentTarget.querySelector(
-
-          'button[type="submit"]'
-
-        );
-
-
-
-        // Validate name.
-
-
-
-        if (name.length < 2 || name.length > 100) {
-
-
-
-          showAuthMessage(
-
-            "Name must be between 2 and 100 characters."
-
-          );
-
-
-
-          return;
-
-
-
-        }
-
-
-
-        // Validate password.
-
-
-
-        if (password.length < 12 || password.length > 128) {
-
-
-
-          showAuthMessage(
-
-            "Password must contain between 12 and 128 characters."
-
-          );
-
-
-
-          return;
-
-
-
-        }
-
-
-
-        // Validate terms acceptance.
-
-
-
-        if (!termsAccepted) {
-
-
-
-          showAuthMessage(
-
-            "Please accept the Terms and Privacy Policy."
-
-          );
-
-
-
-          return;
-
-
-
-        }
-
-
-
-        button.disabled = true;
-
-
-
-        button.textContent = "Creating account...";
-
-
-
-        try {
-
-
-
-          const data = await sendAuthRequest(
-
-            "/api/auth/register",
-
-            {
-
-              name,
-
-              email,
-
-              password
-
-            }
-
-          );
-
-
-
-          showAuthMessage(
-
-            data.message || "Your CineIT account has been created!",
-
-            "success"
-
-          );
-
-
-
-          // Redirect after successful registration.
-
-
-
-          setTimeout(() => {
-
-
-
-            window.location.href = "../index.html";
-
-
-
-          }, 1000);
-
-
-
-        } catch (error) {
-
-
-
-          showAuthMessage(
-
-            error.message === "Failed to fetch"
-
-              ? "Cannot connect to CineIT server. Please try again later."
-
-              : error.message
-
-          );
-
-
-
-        } finally {
-
-
-
-          button.disabled = false;
-
-
-
-          button.textContent = "Create Account →";
-
-
-
-        }
-
-
-
-      });
+  } catch (error) {
+    showAuthMessage(error.message || "Unable to create your account. Please try again.");
+  } finally {
+    setBusy(button, false, "Create Account →");
+  }
+});

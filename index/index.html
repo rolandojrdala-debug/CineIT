@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#050705">
+
+    <title>CineIT | Your Cinema Companion</title>
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Homepage CSS -->
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+
+    <!-- Top Navigation -->
+    <header class="topbar">
+
+        <a class="logo" href="index.html">
+            <span class="logo-icon" aria-hidden="true">
+                <i></i><i></i><i></i><i></i>
+            </span>
+            <span>Cine<span>IT</span></span>
+        </a>
+
+        <div class="topbar-right">
+
+            <a href="index.html">HOME</a>
+
+            <span class="topbar-dot"></span>
+
+            <a href="../cinemas/cinemas.html">CINEMAS</a>
+
+            <span class="topbar-dot"></span>
+
+            <a href="#now-showing">FILMS</a>
+
+            <span class="topbar-dot"></span>
+
+            <a href="../log-in/log-in.html">Log In/Sign Up</a>
+
+            <button type="button" id="themeToggle" class="theme-toggle">
+                ☀️ Light Mode
+            </button>
+
+        </div>
+    </header>
+
+
+    <main class="landing-main">
+
+        <!-- Hero Section -->
+        <section class="hero-split">
+
+            <!-- Left: Interactive Movie Carousel -->
+            <div class="carousel-container" id="carousel">
+
+                <div class="carousel-track" id="track">
+
+                    <!-- Slide 1 -->
+                    <div class="carousel-slide">
+
+                        <div class="slide-bg" style="background-image: url('https://chat.google.com/u/0/api/get_attachment_url?url_type=FIFE_URL&content_type=image%2Fpng&attachment_token=AJGomAbSQwFSVG5Y44WdrccbsPKnd8w3QOmX8kQn%2BZNjvW6T4c18rEKbfQqN%2BWwjBV%2F%2BY6QQvioHZA7AdGD465kK2yBDUWPwpYj0sYu13mc52nfRqW9JIU8VRni119gFa3tuBqvvHNubvPAdQULZlokFf%2Fv4Ud%2BZEabPtDlnckny%2FQDPBM%2BzcQxGeceph2yufe6pFwWV2AKIuQ%2B9j%2F5jMaeHmRD3J2xlWFcmTgO6fkydge%2FeQC4bdFRvc13soG1KVj5SaPN%2BVU8wnPr0OdAsA%2Fe2dhN06q%2BtfJfPTfMGkO0rT3Pzv7UtK1FNUQZjQdoJxcnaQ89BY0DqRD1aiqZXv4HlFW%2BeyREkiEWF42Uc%2BiUPn5BNTEySXvoHJ13V4LF%2Bb1vBHJcBQ5RQHM5SXESByf8edBt11UNA0pdDFLtjIJ3cG3b930DDxsU%2B5tmHybZQv2m5JePfiHDM2pK4zrMz5TdINXnI1kh0es6hSsI1E%2FTzwSkD3wDU5cRV%2FG2YKs0q%2FItCNYiTAeZVf%2BWojqimDE0yG4YSpnag15%2BnP%2BFyqiHSu1QEyOiRxNtxerDpRSLDk6x2tsVZY1g%2Bm1aeA%2FDl9I63hvj3us6S%2FbZlhKlju0P1wz8RvQfGyFEifbaNgeeX5JT%2FW5na0g%3D%3D&allow_caching=true&sz=w1920-h928-rw&auditContext=forDisplay');"></div>
+
+                        <div class="slide-gradient"></div>
+
+                        <div class="slide-content">
+                            <h2>Chat GTT: Nicolai Returns</h2>
+                            <p>Sci-Fi • IMAX Exclusive</p>
+                        </div>
+
+                    </div>
+
+
+                    <!-- Slide 2 -->
+                    <div class="carousel-slide">
+
+                        <div class="slide-bg" style="background-image: url('https://chat.google.com/u/0/api/get_attachment_url?url_type=FIFE_URL&content_type=image%2Fpng&attachment_token=AJGomAZatTHsSsW9mEZO0YCOcDN7p0ucUYr4u2r5x4P7FyIylP7AuB6sVVQp0VZGhkqxc7dgEaD%2BqCMWFwuZhR5ggosP6b1PVZdilmVT%2BgkuNC1hCMqMzg%2ByctN8K4eDsEKja4pgkNkph7G%2FtaHnTmCxmfMVh1%2BaDiW2TMs6W3VJcjBR1U6peyqKzOkZN1bT4HnsUgOccgsSZqdfkoAPO7ua3LrUu2jw1nLIS8G5%2FwvZIpoF%2FWA35bIoTHfOt3MZlRgXEsAvDzXgzVjjbuomd371m0PHb%2B4NMyn5XHncikvKA1yOltAh8Qt7YugIuGADz3qhjixhHPy9YzZCNidbNQ9rCgMMAaWfgBijqxerUNz2%2F2uFOVLY66FddycFeUupcvZJa1lZAI74R59j6mql39rhkA%2B29%2Bt%2Fqybe3GENLWliOlUzBmWHTKEIPc5TxpX0eZoLrN3fuA1H5aUzk%2FH50Tpklwg%2B9iRYCfBkzAI%2FWlLK0RbfHMQsQlQzb%2FTVpsPn4TRj15QrLOHo5adw6MnCMJ%2FuCS3D9GkE9w96jurSnA2Pp%2FA6DbFYk25QvZLPJY0EbOesMDnUv%2FbaTy2TbM3I%2F4pNX3ymy04DT18dHqGpt4iWvZKKsu8%2B6So3LiOZkIrXAwQdfYmmsg%3D%3D&allow_caching=true&sz=w1920-h928-rw&auditContext=forDisplay');"></div>
+
+                        <div class="slide-gradient"></div>
+
+                        <div class="slide-content">
+                            <h2>The Last Baterbonia</h2>
+                            <p>Action & Adventure • Premiering Today</p>
+                        </div>
+
+                    </div>
+
+
+                    <!-- Slide 3 -->
+                    <div class="carousel-slide">
+
+                        <div class="slide-bg" style="background-image: url('https://chat.google.com/u/0/api/get_attachment_url?url_type=FIFE_URL&content_type=image%2Fpng&attachment_token=AJGomAYaBMCs%2Bn5OxrTecwQWiqcc7NAMA3FByWNg1AIwbWuJonxEWZbgRA9D1mbFOCrrQgJSvT1ECAtf0U63horVmrJ%2FlOphsZRsruV66HJJ2FFAdKLN7A%2FpL%2B53RrMtwWUpsdMKkLjaS8vniGj78f63g78LGrKZbxHHWg2BHFz0TY6swnWea9%2B5tTz0LEqZ9r4oAtutu7h4XndB6rMwHd0wZsa4WuUX8Ap71wURpumvozPLqpE4v659Nwi0hgSUqQ8%2BLcVj7uze6Ql8pU6Zkx9zkI2gRJynw0nypQZ6L0%2FyWAFFjQ%2BxILUzriLPZL21TE8DkvTC0BCK%2FwyaNV2cyqCzsjGK4wRpx%2Ft1xjTsr38%2F6WYavQBf%2FO%2BFnVWQCDUywWgUeCD4%2FL7BnncOuXzXGbzbiJAK28kXXcXi1o7tfz0l%2F5Fa0bfN2G9nawja3vWViFIXyIrIgGaWgUFvbne91k8Cw%2F4dSxfJYZULT5YLxdLLAm5Tf%2BKk%2Bh545%2FM3LfUGhcT9MywYIuD7wBngD0SRBpFqG1LOrZuJsrtD89WJu4fGwFcNhrv6XrQmJUXTruTrq5oHGOA%2BJnyLc%2Beu6aBX59h%2FopzGtJw6Sd5FpRUCCtfX5eTDPyPN6GESbWnqQ5OyzkfvOi3j&allow_caching=true&sz=w1920-h928-rw&auditContext=forDisplay');"></div>
+
+                        <div class="slide-gradient"></div>
+
+                        <div class="slide-content">
+                            <h2>Midnight Shadows</h2>
+                            <p>Thriller • Rated R</p>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Carousel Controls -->
+                <div class="carousel-controls">
+
+                    <button class="ctrl-btn" id="prevBtn">
+                        &#10094;
+                    </button>
+
+                    <button class="ctrl-btn" id="nextBtn">
+                        &#10095;
+                    </button>
+
+                </div>
+
+
+                <!-- Carousel Indicators -->
+                <div class="carousel-indicators">
+
+                    <div class="dot active" data-index="0"></div>
+                    <div class="dot" data-index="1"></div>
+                    <div class="dot" data-index="2"></div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Right: Account Access Card -->
+            <div class="access-card">
+
+                <div class="card-header">
+                    <h2>Account Access</h2>
+                    <p>Book tickets and manage your watchlist.</p>
+                </div>
+
+                <a
+                    href="../log-in/log-in.html"
+                    class="primary"
+                    style="display: block; text-align: center; text-decoration: none;"
+                >
+                    Sign In / Create Account →
+                </a>
+
+            </div>
+
+        </section>
+
+
+        <!-- Now Showing Section -->
+        <section class="movies-section" id="now-showing">
+
+            <div class="section-header">
+                <h2>Now Showing</h2>
+                <div class="section-line"></div>
+            </div>
+
+
+            <div class="movies-grid">
+
+                <!-- Movie 1 -->
+                <div class="movie-card">
+
+                    <div class="poster-placeholder">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"></path>
+                        </svg>
+                        <small>POSTER</small>
+                    </div>
+
+                    <div class="movie-info">
+                        <h3>Dune: Part Two</h3>
+                        <p>Sci-Fi • 2h 46m</p>
+                    </div>
+
+                </div>
+
+
+                <!-- Movie 2 -->
+                <div class="movie-card">
+
+                    <div class="poster-placeholder">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"></path>
+                        </svg>
+                        <small>POSTER</small>
+                    </div>
+
+                    <div class="movie-info">
+                        <h3>Furiosa: A Mad Max Saga</h3>
+                        <p>Action • 2h 28m</p>
+                    </div>
+
+                </div>
+
+
+                <!-- Movie 3 -->
+                <div class="movie-card">
+
+                    <div class="poster-placeholder">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"></path>
+                        </svg>
+                        <small>POSTER</small>
+                    </div>
+
+                    <div class="movie-info">
+                        <h3>Inside Out 2</h3>
+                        <p>Animation • 1h 36m</p>
+                    </div>
+
+                </div>
+
+
+                <!-- Movie 4 -->
+                <div class="movie-card">
+
+                    <div class="poster-placeholder">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"></path>
+                        </svg>
+                        <small>POSTER</small>
+                    </div>
+
+                    <div class="movie-info">
+                        <h3>Deadpool & Wolverine</h3>
+                        <p>Action / Comedy • 2h 07m</p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Coming Soon Section -->
+        <section class="movies-section">
+
+            <div class="section-header">
+                <h2>Coming Soon</h2>
+                <div class="section-line"></div>
+            </div>
+
+
+            <div class="movies-grid">
+
+                <!-- Movie 1 -->
+                <div class="movie-card">
+
+                    <div class="poster-placeholder">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001-1z"></path>
+                        </svg>
+                        <small>POSTER</small>
+                    </div>
+
+                    <div class="movie-info">
+                        <h3>Gladiator II</h3>
+                        <p>Action / Drama • Nov 2026</p>
+                    </div>
+
+                </div>
+
+
+                <!-- Movie 2 -->
+                <div class="movie-card">
+
+                    <div class="poster-placeholder">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 01-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"></path>
+                        </svg>
+                        <small>POSTER</small>
+                    </div>
+
+                    <div class="movie-info">
+                        <h3>Wicked: Part One</h3>
+                        <p>Fantasy / Musical • Nov 2026</p>
+                    </div>
+
+                </div>
+
+
+                <!-- Movie 3 -->
+                <div class="movie-card">
+
+                    <div class="poster-placeholder">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001-1z"></path>
+                        </svg>
+                        <small>POSTER</small>
+                    </div>
+
+                    <div class="movie-info">
+                        <h3>Mufasa: The Lion King</h3>
+                        <p>Adventure • Dec 2026</p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- Homepage JavaScript -->
+    <script src="index.js"></script>
+
+</body>
+</html>

@@ -1,6 +1,5 @@
 /* =====================================
-
-       CINEIT THEME COLORS
+CINEIT THEME COLORS
 
     ===================================== */
 
@@ -78,7 +77,7 @@
 
     /* =====================================
 
-       GENERAL
+GENERAL
 
     ===================================== */
 
@@ -92,7 +91,7 @@
 
       font-family: Manrope, Arial, sans-serif;
 
-      transition: *background* .3s, color .3s;
+      transition: background .3s, color .3s;
 
       overflow-x: hidden;
 
@@ -780,7 +779,7 @@
 
       cursor: pointer;
 
-      transition: *background* 0.3s;
+      transition: background 0.3s;
 
       margin-top: 10px;
 
@@ -798,7 +797,7 @@
 
     /* =====================================
 
-       MOVIE LISTS (Bottom Section)
+MOVIE LISTS (Bottom Section)
 
     ===================================== */
 
@@ -1037,3 +1036,26 @@
       }
 
     }
+
+    /* Clickable Poster Wrapper */
+.poster-link {
+    display: block;
+    width: 100%;
+    border-radius: 8px; /* Smooth rounded corners */
+    overflow: hidden;
+    transition: transform 0.2s ease-in-out;
+}
+
+/* Hover Effect for Desktop */
+.poster-link:hover {
+    transform: scale(1.03); 
+}
+
+/* Responsive Image Placeholders */
+.poster-img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 2 / 3; /* Forces standard movie poster dimensions */
+    object-fit: cover;
+    display: block;
+}

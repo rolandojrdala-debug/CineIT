@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#050705">
+    <title>Booking | CineIT</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Updated path to index.css in the root folder -->
+    <link rel="stylesheet" href="../index.css">
+
+    <style>
+        .booking-poster {
+            width: 100%;
+            border-radius: 12px;
+            aspect-ratio: 2 / 3;
+            object-fit: cover;
+            border: 1px solid var(--line);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        .booking-select {
+            padding: 14px;
+            border-radius: 8px;
+            border: 1px solid var(--line);
+            background: var(--input-bg);
+            color: var(--text);
+            font-family: inherit;
+            font-size: 13px;
+            outline: none;
+            width: 100%;
+            transition: border-color 0.2s;
+        }
+
+        .booking-select:focus { border-color: var(--green); }
+
+        .seat-map {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 8px;
+            margin-top: 15px;
+            margin-bottom: 20px;
+        }
+
+        .seat {
+            aspect-ratio: 1;
+            background: var(--secondary-bg);
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.2s;
+            display: grid;
+            place-items: center;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .seat:hover:not(.taken) { border-color: var(--green); }
+        .seat.selected { background: var(--green); border-color: var(--green); color: #fff; }
+        
+        .seat.taken { 
+            background: var(--topbar-bg); 
+            cursor: not-allowed; 
+            opacity: 0.5; 
+            border-color: transparent; 
+        }
+
+        .screen {
+            height: 4px;
+            background: var(--line);
+            margin: 20px 0;
+            border-radius: 2px;
+            position: relative;
+        }
+        .screen::after {
+            content: 'SCREEN';
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            color: var(--muted);
+            letter-spacing: 2px;
+            font-weight: 700;
+        }
+
+        .booking-summary {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--line);
+            display: flex;
+            justify-content: space-between;
+            font-size: 15px;
+            font-weight: 800;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Top Navigation -->
+    <header class="topbar">
+        <a class="logo" href="../index.html">
+            <span class="logo-icon" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+            <span>Cine<span>IT</span></span>
+        </a>
+        <div class="topbar-right">
+            <a href="../index.html">HOME</a>
+            <span class="topbar-dot"></span>
+            <a href="../cinemas/cinemas.html">CINEMAS</a>
+            <button type="button" id="themeToggle" class="theme-toggle">☀️ Light Mode</button>
+        </div>
+    </header>
+
+    <main class="landing-main">
+        <div class="section-header">
+            <h2>Book Your Tickets</h2>
+            <div class="section-line"></div>
+        </div>
+
+        <section class="hero-split" style="align-items: flex-start;">
+            
+            <!-- Left: Dynamic Movie Poster & Details -->
+            <div class="movie-display">
+                <img id="dyn-poster" src="https://placehold.co/300x450/1a1a1a/ffffff?text=Loading..." alt="Poster" class="booking-poster">
+                <h2 id="dyn-title" style="margin-top: 20px; font-size: 28px; font-weight: 800; letter-spacing: -0.5px;">Loading Movie...</h2>
+                <p id="dyn-info" style="color: var(--muted); font-size: 14px; font-weight: 600; margin-top: 5px;"></p>
+            </div>
+
+            <!-- Right: Booking Form -->
+            <div class="access-card">
+                <div class="tabs">
+                    <button class="tab-btn active">1. Details & Seats</button>
+                    <button class="tab-btn">2. Snacks</button>
+                    <button class="tab-btn">3. Payment</button>
+                </div>
+
+                <form id="booking-form" class="auth-form active">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div class="field">
+                            <label>Date</label>
+                            <input type="date" required>
+                        </div>
+                        <div class="field">
+                            <label>Time</label>
+                            <select class="booking-select" required>
+                                <option value="">Select Time</option>
+                                <option>11:30 AM</option>
+                                <option>2:15 PM</option>
+                                <option>5:00 PM</option>
+                                <option>8:45 PM</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 15px;">
+                        <label style="font-size: 11px; font-weight: 700; color: var(--text);">Select Seats</label>
+                        <div class="screen"></div>
+                        <div class="seat-map" id="seat-map"></div>
+                    </div>
+
+                    <div class="booking-summary">
+                        <span>Total (0 seats)</span>
+                        <span style="color: var(--green);" id="total-price">$0.00</span>
+                    </div>
+
+                    <button type="button" class="primary" onclick="alert('Proceeding to Snacks!')">Proceed to Snacks →</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Parse movie details passed from homepage URL
+        const params = new URLSearchParams(window.location.search);
+        const title = params.get('title') || 'Select a Movie';
+        const poster = params.get('poster') || 'https://placehold.co/300x450/1a1a1a/ffffff?text=No+Poster';
+        const info = params.get('info') || '';
+
+        document.getElementById('dyn-title').textContent = title;
+        document.getElementById('dyn-poster').src = poster;
+        document.getElementById('dyn-info').textContent = info;
+
+        // Interactive seat selector logic
+        const seatMap = document.getElementById('seat-map');
+        const priceDisplay = document.getElementById('total-price');
+        const summaryText = document.querySelector('.booking-summary span:first-child');
+        const ticketPrice = 12.50;
+        let selectedSeats = 0;
+
+        for (let i = 0; i < 32; i++) {
+            const seat = document.createElement('div');
+            seat.classList.add('seat');
+            
+            if (Math.random() < 0.25) {
+                seat.classList.add('taken');
+            } else {
+                seat.addEventListener('click', () => {
+                    seat.classList.toggle('selected');
+                    selectedSeats = document.querySelectorAll('.seat.selected').length;
+                    summaryText.textContent = `Total (${selectedSeats} seats)`;
+                    priceDisplay.textContent = `$${(selectedSeats * ticketPrice).toFixed(2)}`;
+                });
+            }
+            seatMap.appendChild(seat);
+        }
+
+        // Shared Theme Toggle Logic
+        const themeToggle = document.getElementById("themeToggle");
+        let currentTheme = localStorage.getItem("cineit-theme") || "dark";
+        function applyTheme() {
+            document.documentElement.setAttribute("data-theme", currentTheme);
+            themeToggle.textContent = currentTheme === "dark" ? "☀️ Light Mode" : "🌙 Dark Mode";
+        }
+        applyTheme();
+        themeToggle.addEventListener("click", () => {
+            currentTheme = currentTheme === "dark" ? "light" : "dark";
+            localStorage.setItem("cineit-theme", currentTheme);
+            applyTheme();
+        });
+    </script>
+</body>
+</html>

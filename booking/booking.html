@@ -10,93 +10,219 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- Updated path to index.css in the root folder -->
+
+    <!-- Shared CineIT Root Stylesheet -->
     <link rel="stylesheet" href="../index.css">
 
     <style>
         .booking-poster {
             width: 100%;
-            border-radius: 12px;
+            border-radius: 16px;
             aspect-ratio: 2 / 3;
             object-fit: cover;
             border: 1px solid var(--line);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+        }
+
+        .movie-meta-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .meta-pill {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 5px 10px;
+            border-radius: 6px;
+            background: var(--panel);
+            border: 1px solid var(--line);
+            color: var(--muted);
+        }
+
+        .meta-pill.accent {
+            border-color: var(--green);
+            color: var(--green);
         }
 
         .booking-select {
-            padding: 14px;
+            padding: 13px 14px;
             border-radius: 8px;
             border: 1px solid var(--line);
             background: var(--input-bg);
             color: var(--text);
             font-family: inherit;
             font-size: 13px;
+            font-weight: 600;
             outline: none;
             width: 100%;
             transition: border-color 0.2s;
         }
 
-        .booking-select:focus { border-color: var(--green); }
+        .booking-select:focus {
+            border-color: var(--green);
+        }
+
+        .form-grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        @media (max-width: 560px) {
+            .form-grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Screen & Seat Map */
+        .screen-wrap {
+            margin: 18px 0 26px;
+            text-align: center;
+        }
+
+        .screen {
+            height: 6px;
+            background: linear-gradient(90deg, transparent, var(--green), transparent);
+            border-radius: 999px;
+            box-shadow: 0 6px 20px rgba(75, 225, 29, 0.35);
+            margin-bottom: 8px;
+        }
+
+        .screen-label {
+            font-size: 10px;
+            color: var(--muted);
+            letter-spacing: 3px;
+            font-weight: 800;
+        }
+
+        .seat-legend {
+            display: flex;
+            justify-content: center;
+            gap: 18px;
+            margin-bottom: 14px;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--muted);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .legend-box {
+            width: 14px;
+            height: 14px;
+            border-radius: 4px;
+            border: 1px solid var(--line);
+            background: var(--secondary-bg);
+        }
+
+        .legend-box.selected {
+            background: var(--green);
+            border-color: var(--green);
+        }
+
+        .legend-box.taken {
+            background: var(--topbar-bg);
+            opacity: 0.45;
+        }
 
         .seat-map {
             display: grid;
             grid-template-columns: repeat(8, 1fr);
             gap: 8px;
-            margin-top: 15px;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
 
         .seat {
             aspect-ratio: 1;
             background: var(--secondary-bg);
             border: 1px solid var(--line);
-            border-radius: 6px;
+            border-radius: 7px;
             cursor: pointer;
-            transition: 0.2s;
+            transition: transform 0.15s, border-color 0.2s, background 0.2s;
             display: grid;
             place-items: center;
             font-size: 10px;
-            font-weight: 700;
-        }
-
-        .seat:hover:not(.taken) { border-color: var(--green); }
-        .seat.selected { background: var(--green); border-color: var(--green); color: #fff; }
-        
-        .seat.taken { 
-            background: var(--topbar-bg); 
-            cursor: not-allowed; 
-            opacity: 0.5; 
-            border-color: transparent; 
-        }
-
-        .screen {
-            height: 4px;
-            background: var(--line);
-            margin: 20px 0;
-            border-radius: 2px;
-            position: relative;
-        }
-        .screen::after {
-            content: 'SCREEN';
-            position: absolute;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 10px;
+            font-weight: 800;
             color: var(--muted);
-            letter-spacing: 2px;
-            font-weight: 700;
+            user-select: none;
+        }
+
+        .seat:hover:not(.taken) {
+            border-color: var(--green);
+            color: var(--text);
+            transform: translateY(-2px);
+        }
+
+        .seat.selected {
+            background: var(--green);
+            border-color: var(--green);
+            color: #050705;
+        }
+
+        .seat.taken {
+            background: var(--topbar-bg);
+            cursor: not-allowed;
+            opacity: 0.4;
+            border-color: transparent;
+            text-decoration: line-through;
+        }
+
+        .selected-seats-bar {
+            min-height: 28px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 12px;
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .seat-chip {
+            padding: 3px 8px;
+            border-radius: 5px;
+            background: rgba(75, 225, 29, 0.14);
+            border: 1px solid var(--green);
+            color: var(--green);
+            font-size: 11px;
+            font-weight: 800;
         }
 
         .booking-summary {
-            margin-top: 15px;
+            margin-top: 10px;
             padding-top: 15px;
             border-top: 1px solid var(--line);
             display: flex;
             justify-content: space-between;
+            align-items: center;
             font-size: 15px;
             font-weight: 800;
+        }
+
+        .form-error {
+            display: none;
+            padding: 10px 12px;
+            border-radius: 8px;
+            background: rgba(239, 68, 68, 0.12);
+            border: 1px solid rgba(239, 68, 68, 0.45);
+            color: #f87171;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .form-error.show {
+            display: block;
+        }
+
+        .tab-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.55;
         }
     </style>
 </head>
@@ -113,6 +239,10 @@
             <a href="../index.html">HOME</a>
             <span class="topbar-dot"></span>
             <a href="../cinemas/cinemas.html">CINEMAS</a>
+            <span class="topbar-dot"></span>
+            <a href="../index.html#now-showing">FILMS</a>
+            <span class="topbar-dot"></span>
+            <a href="../log-in/log-in.html" id="nav-auth-link">LOG IN / SIGN UP</a>
             <button type="button" id="themeToggle" class="theme-toggle">☀️ Light Mode</button>
         </div>
     </header>
@@ -124,93 +254,108 @@
         </div>
 
         <section class="hero-split" style="align-items: flex-start;">
-            
+
             <!-- Left: Dynamic Movie Poster & Details -->
             <div class="movie-display">
-                <img id="dyn-poster" src="https://placehold.co/300x450/1a1a1a/ffffff?text=Loading..." alt="Poster" class="booking-poster">
+                <img id="dyn-poster" src="https://placehold.co/300x450/1a1a1a/ffffff?text=Loading..." alt="Movie Poster" class="booking-poster">
                 <h2 id="dyn-title" style="margin-top: 20px; font-size: 28px; font-weight: 800; letter-spacing: -0.5px;">Loading Movie...</h2>
                 <p id="dyn-info" style="color: var(--muted); font-size: 14px; font-weight: 600; margin-top: 5px;"></p>
+                <div class="movie-meta-badges">
+                    <span class="meta-pill accent">NOW SHOWING</span>
+                    <span class="meta-pill">RESERVED SEATING</span>
+                    <span class="meta-pill">E-TICKET READY</span>
+                </div>
             </div>
 
-            <!-- Right: Booking Form -->
+            <!-- Right: Step 1 Booking Form -->
             <div class="access-card">
                 <div class="tabs">
-                    <button class="tab-btn active">1. Details & Seats</button>
-                    <button class="tab-btn">2. Snacks</button>
-                    <button class="tab-btn">3. Payment</button>
+                    <button type="button" class="tab-btn active">1. Seats</button>
+                    <button type="button" class="tab-btn" disabled>2. Snacks</button>
+                    <button type="button" class="tab-btn" disabled>3. Payment</button>
+                    <button type="button" class="tab-btn" disabled>4. Ticket</button>
                 </div>
 
-                <form id="booking-form" class="auth-form active">
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <form id="booking-form" class="auth-form active" novalidate>
+                    <div class="form-grid-2">
                         <div class="field">
-                            <label>Date</label>
-                            <input type="date" required>
+                            <label for="cinema-select">Cinema Branch</label>
+                            <select id="cinema-select" class="booking-select" required>
+                                <option value="SM Mall of Asia">SM Mall of Asia</option>
+                                <option value="SM Megamall">SM Megamall</option>
+                                <option value="SM North EDSA">SM North EDSA</option>
+                                <option value="Greenbelt 3">Ayala Malls Greenbelt 3</option>
+                                <option value="Glorietta 4">Ayala Malls Glorietta 4</option>
+                                <option value="Trinoma">Ayala Malls Trinoma</option>
+                            </select>
                         </div>
+
                         <div class="field">
-                            <label>Time</label>
-                            <select class="booking-select" required>
-                                <option value="">Select Time</option>
-                                <option>11:30 AM</option>
-                                <option>2:15 PM</option>
-                                <option>5:00 PM</option>
-                                <option>8:45 PM</option>
+                            <label for="format-select">Experience / Format</label>
+                            <select id="format-select" class="booking-select" required>
+                                <option value="2D Standard" data-price="320">2D Standard — ₱320.00</option>
+                                <option value="IMAX Laser" data-price="520">IMAX Laser — ₱520.00</option>
+                                <option value="Director's Club" data-price="650">Director's Club — ₱650.00</option>
+                                <option value="4DX Atmos" data-price="580">4DX Atmos — ₱580.00</option>
                             </select>
                         </div>
                     </div>
 
-                    <div style="margin-top: 15px;">
-                        <label style="font-size: 11px; font-weight: 700; color: var(--text);">Select Seats</label>
-                        <div class="screen"></div>
-                        <div class="seat-map" id="seat-map"></div>
+                    <div class="form-grid-2">
+                        <div class="field">
+                            <label for="date-input">Date</label>
+                            <input type="date" id="date-input" required>
+                        </div>
+                        <div class="field">
+                            <label for="time-select">Showtime</label>
+                            <select id="time-select" class="booking-select" required>
+                                <option value="">Select Time</option>
+                                <option value="11:30 AM">11:30 AM</option>
+                                <option value="2:15 PM">2:15 PM</option>
+                                <option value="5:00 PM">5:00 PM</option>
+                                <option value="8:45 PM">8:45 PM</option>
+                                <option value="10:30 PM">10:30 PM</option>
+                            </select>
+                        </div>
                     </div>
+
+                    <div style="margin-top: 8px;">
+                        <label style="font-size: 11px; font-weight: 700; color: var(--text); display: block; margin-bottom: 10px;">Select Seats</label>
+
+                        <div class="seat-legend">
+                            <span class="legend-item"><span class="legend-box"></span> Available</span>
+                            <span class="legend-item"><span class="legend-box selected"></span> Selected</span>
+                            <span class="legend-item"><span class="legend-box taken"></span> Occupied</span>
+                        </div>
+
+                        <div class="screen-wrap">
+                            <div class="screen"></div>
+                            <span class="screen-label">CINEMA SCREEN</span>
+                        </div>
+
+                        <div class="seat-map" id="seat-map"></div>
+
+                        <div class="selected-seats-bar" id="selected-seats-bar">
+                            <span>No seats selected yet</span>
+                        </div>
+                    </div>
+
+                    <div id="booking-error" class="form-error" role="alert"></div>
 
                     <div class="booking-summary">
-                        <span>Total (0 seats)</span>
-                        <span style="color: var(--green);" id="total-price">$0.00</span>
+                        <span id="summary-label">Tickets (0 seats)</span>
+                        <span style="color: var(--green);" id="total-price">₱0.00</span>
                     </div>
 
-                    <button type="button" class="primary" onclick="alert('Proceeding to Snacks!')">Proceed to Snacks →</button>
+                    <button type="submit" class="primary">Proceed to Snacks →</button>
                 </form>
             </div>
         </section>
     </main>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../supabase-config.js"></script>
     <script>
-        // Parse movie details passed from homepage URL
-        const params = new URLSearchParams(window.location.search);
-        const title = params.get('title') || 'Select a Movie';
-        const poster = params.get('poster') || 'https://placehold.co/300x450/1a1a1a/ffffff?text=No+Poster';
-        const info = params.get('info') || '';
-
-        document.getElementById('dyn-title').textContent = title;
-        document.getElementById('dyn-poster').src = poster;
-        document.getElementById('dyn-info').textContent = info;
-
-        // Interactive seat selector logic
-        const seatMap = document.getElementById('seat-map');
-        const priceDisplay = document.getElementById('total-price');
-        const summaryText = document.querySelector('.booking-summary span:first-child');
-        const ticketPrice = 12.50;
-        let selectedSeats = 0;
-
-        for (let i = 0; i < 32; i++) {
-            const seat = document.createElement('div');
-            seat.classList.add('seat');
-            
-            if (Math.random() < 0.25) {
-                seat.classList.add('taken');
-            } else {
-                seat.addEventListener('click', () => {
-                    seat.classList.toggle('selected');
-                    selectedSeats = document.querySelectorAll('.seat.selected').length;
-                    summaryText.textContent = `Total (${selectedSeats} seats)`;
-                    priceDisplay.textContent = `$${(selectedSeats * ticketPrice).toFixed(2)}`;
-                });
-            }
-            seatMap.appendChild(seat);
-        }
-
-        // Shared Theme Toggle Logic
         const themeToggle = document.getElementById("themeToggle");
         let currentTheme = localStorage.getItem("cineit-theme") || "dark";
         function applyTheme() {
@@ -222,6 +367,148 @@
             currentTheme = currentTheme === "dark" ? "light" : "dark";
             localStorage.setItem("cineit-theme", currentTheme);
             applyTheme();
+        });
+
+        if (window.cineitSupabase) {
+            window.cineitSupabase.auth.getSession().then(({ data }) => {
+                const user = data?.session?.user;
+                if (user) {
+                    const navLink = document.getElementById("nav-auth-link");
+                    navLink.textContent = (user.user_metadata?.full_name || user.email).toUpperCase();
+                    navLink.href = "../index.html";
+                }
+            });
+        }
+
+        const params = new URLSearchParams(window.location.search);
+        const savedBooking = JSON.parse(sessionStorage.getItem("cineit_booking") || "null");
+
+        const title = params.get("title") || savedBooking?.movieTitle || "Avengers Doomsday";
+        const poster = params.get("poster") || savedBooking?.moviePoster || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcReNPT3aZ93HOiCNRUtd8kveZ-93n441bw-HB0BVhzara2EjwZiMHYS8RwH&s=10";
+        const info = params.get("info") || savedBooking?.movieInfo || "Sci-Fi • 2h 46m";
+
+        document.getElementById("dyn-title").textContent = title;
+        document.getElementById("dyn-poster").src = poster;
+        document.getElementById("dyn-info").textContent = info;
+
+        const cinemaSelect = document.getElementById("cinema-select");
+        const formatSelect = document.getElementById("format-select");
+        const dateInput = document.getElementById("date-input");
+        const timeSelect = document.getElementById("time-select");
+        const seatMap = document.getElementById("seat-map");
+        const priceDisplay = document.getElementById("total-price");
+        const summaryLabel = document.getElementById("summary-label");
+        const seatsBar = document.getElementById("selected-seats-bar");
+        const errorBox = document.getElementById("booking-error");
+
+        const todayStr = new Date().toISOString().split("T")[0];
+        dateInput.min = todayStr;
+        dateInput.value = (savedBooking && savedBooking.movieTitle === title && savedBooking.date) ? savedBooking.date : todayStr;
+
+        if (savedBooking && savedBooking.movieTitle === title) {
+            if (savedBooking.cinema) cinemaSelect.value = savedBooking.cinema;
+            if (savedBooking.format) formatSelect.value = savedBooking.format;
+            if (savedBooking.time) timeSelect.value = savedBooking.time;
+        }
+
+        const rows = ["A", "B", "C", "D", "E"];
+        const preOccupied = new Set(["A4", "A5", "B3", "C6", "C7", "D2", "D4", "E5"]);
+        const previouslySelected = new Set(
+            (savedBooking && savedBooking.movieTitle === title && Array.isArray(savedBooking.seats))
+                ? savedBooking.seats
+                : []
+        );
+
+        function getUnitPrice() {
+            const selectedOption = formatSelect.options[formatSelect.selectedIndex];
+            return Number(selectedOption.dataset.price || 320);
+        }
+
+        function updateSummary() {
+            const selectedEls = [...document.querySelectorAll(".seat.selected")];
+            const seatCodes = selectedEls.map(el => el.dataset.seat);
+            const unitPrice = getUnitPrice();
+            const subtotal = seatCodes.length * unitPrice;
+
+            summaryLabel.textContent = `Tickets (${seatCodes.length} ${seatCodes.length === 1 ? "seat" : "seats"})`;
+            priceDisplay.textContent = `₱${subtotal.toLocaleString("en-PH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+            if (seatCodes.length === 0) {
+                seatsBar.innerHTML = "<span>No seats selected yet</span>";
+            } else {
+                seatsBar.innerHTML = seatCodes.map(code => `<span class="seat-chip">${code}</span>`).join("");
+            }
+        }
+
+        rows.forEach(row => {
+            for (let col = 1; col <= 8; col++) {
+                const code = `${row}${col}`;
+                const seat = document.createElement("div");
+                seat.className = "seat";
+                seat.dataset.seat = code;
+                seat.textContent = code;
+
+                if (preOccupied.has(code)) {
+                    seat.classList.add("taken");
+                    seat.title = `${code} — Occupied`;
+                } else {
+                    if (previouslySelected.has(code)) {
+                        seat.classList.add("selected");
+                    }
+                    seat.addEventListener("click", () => {
+                        seat.classList.toggle("selected");
+                        errorBox.classList.remove("show");
+                        updateSummary();
+                    });
+                }
+
+                seatMap.appendChild(seat);
+            }
+        });
+
+        formatSelect.addEventListener("change", updateSummary);
+        updateSummary();
+
+        document.getElementById("booking-form").addEventListener("submit", (e) => {
+            e.preventDefault();
+            errorBox.classList.remove("show");
+
+            const selectedSeats = [...document.querySelectorAll(".seat.selected")].map(el => el.dataset.seat);
+            if (!dateInput.value) {
+                errorBox.textContent = "Please choose a screening date.";
+                errorBox.classList.add("show");
+                return;
+            }
+            if (!timeSelect.value) {
+                errorBox.textContent = "Please select a showtime.";
+                errorBox.classList.add("show");
+                return;
+            }
+            if (selectedSeats.length === 0) {
+                errorBox.textContent = "Please select at least one seat to continue.";
+                errorBox.classList.add("show");
+                return;
+            }
+
+            const unitPrice = getUnitPrice();
+            const bookingData = {
+                ...(savedBooking || {}),
+                movieTitle: title,
+                moviePoster: poster,
+                movieInfo: info,
+                cinema: cinemaSelect.value,
+                format: formatSelect.value,
+                date: dateInput.value,
+                time: timeSelect.value,
+                seats: selectedSeats,
+                ticketUnitPrice: unitPrice,
+                ticketSubtotal: selectedSeats.length * unitPrice,
+                snacks: (savedBooking && savedBooking.snacks) ? savedBooking.snacks : [],
+                snacksSubtotal: (savedBooking && savedBooking.snacksSubtotal) ? savedBooking.snacksSubtotal : 0
+            };
+
+            sessionStorage.setItem("cineit_booking", JSON.stringify(bookingData));
+            window.location.href = "snacks.html";
         });
     </script>
 </body>

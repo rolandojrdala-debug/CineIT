@@ -1,0 +1,506 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#050705">
+    <title>Payment & E-Ticket Delivery | CineIT</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Shared CineIT Root Stylesheet -->
+    <link rel="stylesheet" href="../index.css">
+
+    <style>
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
+        .summary-row span:first-child {
+            color: var(--muted);
+            font-weight: 600;
+        }
+
+        .summary-row span:last-child {
+            font-weight: 700;
+            text-align: right;
+        }
+
+        .divider {
+            height: 1px;
+            background: var(--line);
+            margin: 14px 0;
+        }
+
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .pay-method-btn {
+            padding: 12px 10px;
+            border-radius: 10px;
+            border: 1px solid var(--line);
+            background: var(--secondary-bg);
+            color: var(--text);
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 800;
+            cursor: pointer;
+            text-align: center;
+            transition: 0.2s;
+        }
+
+        .pay-method-btn:hover {
+            border-color: var(--green);
+        }
+
+        .pay-method-btn.active {
+            border-color: var(--green);
+            background: rgba(75, 225, 29, 0.12);
+            color: var(--green);
+        }
+
+        .pay-panel {
+            display: none;
+            flex-direction: column;
+            gap: 12px;
+            padding: 16px;
+            border-radius: 12px;
+            background: var(--secondary-bg);
+            border: 1px solid var(--line);
+        }
+
+        .pay-panel.active {
+            display: flex;
+        }
+
+        .form-grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .email-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            border-radius: 6px;
+            background: rgba(75, 225, 29, 0.12);
+            border: 1px solid rgba(75, 225, 29, 0.4);
+            color: var(--green);
+            font-size: 11px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .form-error {
+            display: none;
+            padding: 10px 12px;
+            border-radius: 8px;
+            background: rgba(239, 68, 68, 0.12);
+            border: 1px solid rgba(239, 68, 68, 0.45);
+            color: #f87171;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .form-error.show {
+            display: block;
+        }
+
+        .action-row {
+            display: grid;
+            grid-template-columns: 1fr 1.6fr;
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .secondary-btn {
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid var(--line);
+            background: var(--secondary-bg);
+            color: var(--text);
+            font-family: inherit;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 10px;
+        }
+
+        .secondary-btn:hover {
+            border-color: var(--green);
+            color: var(--green);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Top Navigation -->
+    <header class="topbar">
+        <a class="logo" href="../index.html">
+            <span class="logo-icon" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+            <span>Cine<span>IT</span></span>
+        </a>
+        <div class="topbar-right">
+            <a href="../index.html">HOME</a>
+            <span class="topbar-dot"></span>
+            <a href="../cinemas/cinemas.html">CINEMAS</a>
+            <span class="topbar-dot"></span>
+            <a href="../index.html#now-showing">FILMS</a>
+            <span class="topbar-dot"></span>
+            <a href="../log-in/log-in.html" id="nav-auth-link">LOG IN / SIGN UP</a>
+            <button type="button" id="themeToggle" class="theme-toggle">☀️ Light Mode</button>
+        </div>
+    </header>
+
+    <main class="landing-main">
+        <div class="section-header">
+            <h2>Checkout & Payment</h2>
+            <div class="section-line"></div>
+        </div>
+
+        <section class="hero-split" style="align-items: flex-start; grid-template-columns: 0.95fr 1.25fr;">
+
+            <!-- Left: Itemized Order Breakdown -->
+            <div class="access-card" style="padding: 28px;">
+                <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 16px;">Order Breakdown</h3>
+
+                <div class="summary-row">
+                    <span>Movie</span>
+                    <span id="pay-movie">—</span>
+                </div>
+                <div class="summary-row">
+                    <span>Cinema</span>
+                    <span id="pay-cinema">—</span>
+                </div>
+                <div class="summary-row">
+                    <span>Format</span>
+                    <span id="pay-format">—</span>
+                </div>
+                <div class="summary-row">
+                    <span>Date & Time</span>
+                    <span id="pay-datetime">—</span>
+                </div>
+                <div class="summary-row">
+                    <span>Seats</span>
+                    <span id="pay-seats" style="color: var(--green);">—</span>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="summary-row">
+                    <span id="pay-ticket-label">Tickets</span>
+                    <span id="pay-ticket-amount">₱0.00</span>
+                </div>
+
+                <div id="pay-snacks-breakdown"></div>
+
+                <div class="summary-row">
+                    <span>Online Booking Fee</span>
+                    <span>₱25.00</span>
+                </div>
+
+                <div class="divider"></div>
+
+                <div style="display:flex;justify-content:space-between;align-items:center;font-size:18px;font-weight:800;">
+                    <span>Total Due</span>
+                    <span id="pay-total" style="color: var(--green);">₱0.00</span>
+                </div>
+            </div>
+
+            <!-- Right: Step 3 Email & Payment Form -->
+            <div class="access-card">
+                <div class="tabs">
+                    <button type="button" class="tab-btn" onclick="window.location.href='booking.html'">1. Seats</button>
+                    <button type="button" class="tab-btn" onclick="window.location.href='snacks.html'">2. Snacks</button>
+                    <button type="button" class="tab-btn active">3. Payment</button>
+                    <button type="button" class="tab-btn" disabled style="opacity:0.55;cursor:not-allowed;">4. Ticket</button>
+                </div>
+
+                <form id="payment-form" class="auth-form active" novalidate>
+                    <div>
+                        <div class="email-badge">✉️ E-Ticket & QR Code will be sent to your email</div>
+                        <div class="form-grid-2" style="margin-top: 8px;">
+                            <div class="field">
+                                <label for="cust-name">Full Name</label>
+                                <input type="text" id="cust-name" placeholder="Juan Dela Cruz" required>
+                            </div>
+                            <div class="field">
+                                <label for="cust-email">Email Address (For Ticket)</label>
+                                <input type="email" id="cust-email" placeholder="you@email.com" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 6px;">
+                        <label style="font-size: 11px; font-weight: 700; color: var(--text); display: block; margin-bottom: 8px;">Select Payment Method</label>
+                        <div class="payment-methods" id="payment-methods">
+                            <button type="button" class="pay-method-btn active" data-method="GCash / Maya">📱 GCash / Maya</button>
+                            <button type="button" class="pay-method-btn" data-method="Credit / Debit Card">💳 Card</button>
+                            <button type="button" class="pay-method-btn" data-method="Cinema Counter">🎟️ Over-the-Counter</button>
+                        </div>
+
+                        <!-- Panel 1: E-Wallet -->
+                        <div class="pay-panel active" id="panel-ewallet">
+                            <div class="field">
+                                <label for="ewallet-number">GCash / Maya Mobile Number</label>
+                                <input type="tel" id="ewallet-number" placeholder="09XX XXX XXXX" maxlength="13">
+                            </div>
+                            <p style="font-size: 11px; color: var(--muted);">Instant payment verification. Your CineIT E-Ticket is issued immediately after confirmation.</p>
+                        </div>
+
+                        <!-- Panel 2: Card -->
+                        <div class="pay-panel" id="panel-card">
+                            <div class="field">
+                                <label for="card-number">Card Number</label>
+                                <input type="text" id="card-number" placeholder="4532 •••• •••• 8890" maxlength="19">
+                            </div>
+                            <div class="form-grid-2">
+                                <div class="field">
+                                    <label for="card-expiry">Expiry (MM/YY)</label>
+                                    <input type="text" id="card-expiry" placeholder="08/29" maxlength="5">
+                                </div>
+                                <div class="field">
+                                    <label for="card-cvv">CVV</label>
+                                    <input type="password" id="card-cvv" placeholder="•••" maxlength="4">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Panel 3: Counter -->
+                        <div class="pay-panel" id="panel-counter">
+                            <p style="font-size: 12px; color: var(--text); font-weight: 700;">Pay at Any CineIT Ticket Booth</p>
+                            <p style="font-size: 11px; color: var(--muted); line-height: 1.5;">Your seats will be reserved and an e-ticket voucher will be emailed to you. Present your reference code at the cinema counter at least 30 minutes before showtime.</p>
+                        </div>
+                    </div>
+
+                    <div id="payment-error" class="form-error" role="alert"></div>
+
+                    <div class="action-row">
+                        <button type="button" class="secondary-btn" onclick="window.location.href='snacks.html'">← Back</button>
+                        <button type="submit" class="primary" id="pay-submit-btn">Pay & Send E-Ticket →</button>
+                    </div>
+                </form>
+            </div>
+
+        </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../supabase-config.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script>
+        const themeToggle = document.getElementById("themeToggle");
+        let currentTheme = localStorage.getItem("cineit-theme") || "dark";
+        function applyTheme() {
+            document.documentElement.setAttribute("data-theme", currentTheme);
+            themeToggle.textContent = currentTheme === "dark" ? "☀️ Light Mode" : "🌙 Dark Mode";
+        }
+        applyTheme();
+        themeToggle.addEventListener("click", () => {
+            currentTheme = currentTheme === "dark" ? "light" : "dark";
+            localStorage.setItem("cineit-theme", currentTheme);
+            applyTheme();
+        });
+
+        if (window.cineitSupabase) {
+            window.cineitSupabase.auth.getSession().then(({ data }) => {
+                const user = data?.session?.user;
+                if (user) {
+                    const fullName = user.user_metadata?.full_name || "";
+                    if (fullName && !document.getElementById("cust-name").value) {
+                        document.getElementById("cust-name").value = fullName;
+                    }
+                    if (user.email && !document.getElementById("cust-email").value) {
+                        document.getElementById("cust-email").value = user.email;
+                    }
+                    const navLink = document.getElementById("nav-auth-link");
+                    navLink.textContent = (fullName || user.email).toUpperCase();
+                    navLink.href = "../index.html";
+                }
+            });
+        }
+
+        const booking = JSON.parse(sessionStorage.getItem("cineit_booking") || "null");
+        if (!booking || !booking.seats || booking.seats.length === 0) {
+            window.location.replace("booking.html");
+        }
+
+        const formatPHP = (n) => `₱${Number(n).toLocaleString("en-PH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        const bookingFee = 25;
+        const snacksSubtotal = Number(booking.snacksSubtotal || 0);
+        const grandTotal = Number(booking.ticketSubtotal || 0) + snacksSubtotal + bookingFee;
+
+        document.getElementById("pay-movie").textContent = booking.movieTitle;
+        document.getElementById("pay-cinema").textContent = booking.cinema;
+        document.getElementById("pay-format").textContent = booking.format;
+        document.getElementById("pay-datetime").textContent = `${booking.date} • ${booking.time}`;
+        document.getElementById("pay-seats").textContent = booking.seats.join(", ");
+        document.getElementById("pay-ticket-label").textContent = `Tickets (${booking.seats.length}× ${formatPHP(booking.ticketUnitPrice)})`;
+        document.getElementById("pay-ticket-amount").textContent = formatPHP(booking.ticketSubtotal);
+        document.getElementById("pay-total").textContent = formatPHP(grandTotal);
+
+        const snacksBreakdown = document.getElementById("pay-snacks-breakdown");
+        if (Array.isArray(booking.snacks) && booking.snacks.length > 0) {
+            snacksBreakdown.innerHTML = booking.snacks.map(s => `
+                <div class="summary-row">
+                    <span>${s.qty}× ${s.name}</span>
+                    <span>${formatPHP(s.subtotal)}</span>
+                </div>
+            `).join("");
+        } else {
+            snacksBreakdown.innerHTML = `
+                <div class="summary-row">
+                    <span>Snacks & Drinks</span>
+                    <span>₱0.00</span>
+                </div>
+            `;
+        }
+
+        let selectedMethod = "GCash / Maya";
+        const methodBtns = document.querySelectorAll(".pay-method-btn");
+        const panelEwallet = document.getElementById("panel-ewallet");
+        const panelCard = document.getElementById("panel-card");
+        const panelCounter = document.getElementById("panel-counter");
+
+        methodBtns.forEach(btn => {
+            btn.addEventListener("click", () => {
+                methodBtns.forEach(b => b.classList.remove("active"));
+                btn.classList.add("active");
+                selectedMethod = btn.dataset.method;
+
+                panelEwallet.classList.toggle("active", selectedMethod === "GCash / Maya");
+                panelCard.classList.toggle("active", selectedMethod === "Credit / Debit Card");
+                panelCounter.classList.toggle("active", selectedMethod === "Cinema Counter");
+            });
+        });
+
+        document.getElementById("card-number").addEventListener("input", (e) => {
+            let val = e.target.value.replace(/\D/g, "").slice(0, 16);
+            e.target.value = val.replace(/(.{4})/g, "$1 ").trim();
+        });
+
+        document.getElementById("card-expiry").addEventListener("input", (e) => {
+            let val = e.target.value.replace(/\D/g, "").slice(0, 4);
+            if (val.length >= 3) val = val.slice(0, 2) + "/" + val.slice(2);
+            e.target.value = val;
+        });
+
+        // Optional EmailJS credentials for real SMTP inbox delivery
+        const EMAILJS_CONFIG = {
+            publicKey: "YqO0eiY74z2d7PgG2",
+            serviceId: "service_vwhxzzj",
+            templateId: "template_51utpyx"
+        };
+
+        async function dispatchTicketEmail(ticketPayload) {
+            if (EMAILJS_CONFIG.publicKey && EMAILJS_CONFIG.serviceId && EMAILJS_CONFIG.templateId && window.emailjs) {
+                emailjs.init({ publicKey: EMAILJS_CONFIG.publicKey });
+                await emailjs.send(EMAILJS_CONFIG.serviceId, EMAILJS_CONFIG.templateId, {
+                    to_name: ticketPayload.customerName,
+                    to_email: ticketPayload.customerEmail,
+                    booking_ref: ticketPayload.bookingRef,
+                    movie_title: ticketPayload.movieTitle,
+                    cinema_name: ticketPayload.cinema,
+                    show_datetime: `${ticketPayload.date} at ${ticketPayload.time}`,
+                    seats: ticketPayload.seats.join(", "),
+                    snacks_summary: ticketPayload.snacks.length
+                        ? ticketPayload.snacks.map(s => `${s.qty}x ${s.name}`).join(", ")
+                        : "None",
+                    total_paid: formatPHP(ticketPayload.grandTotal)
+                });
+                return "smtp_sent";
+            }
+            await new Promise(resolve => setTimeout(resolve, 1100));
+            return "dispatched";
+        }
+
+        document.getElementById("payment-form").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const errorBox = document.getElementById("payment-error");
+            const submitBtn = document.getElementById("pay-submit-btn");
+            errorBox.classList.remove("show");
+
+            const custName = document.getElementById("cust-name").value.trim();
+            const custEmail = document.getElementById("cust-email").value.trim();
+
+            if (custName.length < 2) {
+                errorBox.textContent = "Please enter your full name.";
+                errorBox.classList.add("show");
+                return;
+            }
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(custEmail)) {
+                errorBox.textContent = "Please enter a valid email address so we can send your E-Ticket.";
+                errorBox.classList.add("show");
+                return;
+            }
+
+            if (selectedMethod === "GCash / Maya") {
+                const mobile = document.getElementById("ewallet-number").value.replace(/\D/g, "");
+                if (mobile.length < 10) {
+                    errorBox.textContent = "Please enter a valid 11-digit GCash or Maya mobile number.";
+                    errorBox.classList.add("show");
+                    return;
+                }
+            } else if (selectedMethod === "Credit / Debit Card") {
+                const cardNum = document.getElementById("card-number").value.replace(/\D/g, "");
+                const expiry = document.getElementById("card-expiry").value.trim();
+                const cvv = document.getElementById("card-cvv").value.trim();
+                if (cardNum.length < 15 || expiry.length < 5 || cvv.length < 3) {
+                    errorBox.textContent = "Please complete your card number, expiry date, and CVV.";
+                    errorBox.classList.add("show");
+                    return;
+                }
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = "Processing & Emailing Ticket...";
+
+            const randomDigits = Math.floor(100000 + Math.random() * 900000);
+            const bookingRef = `CIT-${new Date().getFullYear()}-${randomDigits}`;
+
+            const finalizedTicket = {
+                ...booking,
+                bookingRef,
+                customerName: custName,
+                customerEmail: custEmail,
+                paymentMethod: selectedMethod,
+                paymentStatus: selectedMethod === "Cinema Counter" ? "RESERVED (PAY AT COUNTER)" : "PAID",
+                bookingFee,
+                grandTotal,
+                issuedAt: new Date().toLocaleString("en-PH")
+            };
+
+            try {
+                await dispatchTicketEmail(finalizedTicket);
+                sessionStorage.setItem("cineit_ticket", JSON.stringify(finalizedTicket));
+
+                const history = JSON.parse(localStorage.getItem("cineit_booking_history") || "[]");
+                history.unshift(finalizedTicket);
+                localStorage.setItem("cineit_booking_history", JSON.stringify(history.slice(0, 20)));
+
+                window.location.href = "ticket.html";
+            } catch (err) {
+                errorBox.textContent = err?.message || "Payment or email dispatch failed. Please try again.";
+                errorBox.classList.add("show");
+                submitBtn.disabled = false;
+                submitBtn.textContent = "Pay & Send E-Ticket →";
+            }
+        });
+    </script>
+</body>
+</html>

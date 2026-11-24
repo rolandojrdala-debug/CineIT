@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#050705">
+    <title>Your E-Ticket | CineIT</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Shared CineIT Root Stylesheet -->
+    <link rel="stylesheet" href="../index.css">
+
+    <style>
+        .email-banner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 14px;
+            padding: 18px 22px;
+            border-radius: 14px;
+            background: rgba(75, 225, 29, 0.1);
+            border: 1px solid var(--green);
+        }
+
+        .email-banner-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .check-circle {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: var(--green);
+            color: #050705;
+            display: grid;
+            place-items: center;
+            font-weight: 900;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .email-banner h3 {
+            font-size: 15px;
+            font-weight: 800;
+            margin-bottom: 2px;
+        }
+
+        .email-banner p {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .banner-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .mini-btn {
+            padding: 9px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--line);
+            background: var(--panel);
+            color: var(--text);
+            font-family: inherit;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .mini-btn:hover {
+            border-color: var(--green);
+            color: var(--green);
+        }
+
+        /* Boarding-Pass Style E-Ticket */
+        .ticket-wrapper {
+            display: grid;
+            grid-template-columns: 1.55fr 0.85fr;
+            background: var(--card-gradient);
+            border: 1px solid var(--line);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+        }
+
+        @media (max-width: 820px) {
+            .ticket-wrapper {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .ticket-main {
+            padding: 32px;
+            display: flex;
+            gap: 24px;
+            align-items: flex-start;
+        }
+
+        @media (max-width: 560px) {
+            .ticket-main {
+                flex-direction: column;
+            }
+        }
+
+        .ticket-poster {
+            width: 145px;
+            aspect-ratio: 2 / 3;
+            border-radius: 12px;
+            object-fit: cover;
+            border: 1px solid var(--line);
+            flex-shrink: 0;
+        }
+
+        .ticket-meta-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px 20px;
+            margin-top: 18px;
+            padding-top: 16px;
+            border-top: 1px dashed var(--line);
+        }
+
+        .meta-block label {
+            display: block;
+            font-size: 10px;
+            font-weight: 800;
+            color: var(--muted);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 3px;
+        }
+
+        .meta-block span {
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .ticket-stub {
+            padding: 32px 26px;
+            border-left: 2px dashed var(--line);
+            background: var(--secondary-bg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            gap: 12px;
+        }
+
+        @media (max-width: 820px) {
+            .ticket-stub {
+                border-left: none;
+                border-top: 2px dashed var(--line);
+            }
+        }
+
+        .qr-box {
+            padding: 12px;
+            background: #ffffff;
+            border-radius: 12px;
+            border: 2px solid var(--green);
+        }
+
+        .ref-code {
+            font-family: monospace;
+            font-size: 14px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            color: var(--green);
+        }
+
+        /* Email Inbox Preview Modal */
+        .email-preview-card {
+            display: none;
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            padding: 28px;
+        }
+
+        .email-preview-card.open {
+            display: block;
+        }
+
+        .email-header-meta {
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--line);
+            margin-bottom: 18px;
+            font-size: 12px;
+            line-height: 1.7;
+            color: var(--muted);
+        }
+
+        .email-header-meta strong {
+            color: var(--text);
+        }
+
+        .ticket-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            justify-content: flex-end;
+        }
+
+        .secondary-btn {
+            padding: 15px 22px;
+            border-radius: 8px;
+            border: 1px solid var(--line);
+            background: var(--panel);
+            color: var(--text);
+            font-family: inherit;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .secondary-btn:hover {
+            border-color: var(--green);
+            color: var(--green);
+        }
+
+        @media print {
+            .topbar, .email-banner, .ticket-actions, .email-preview-card {
+                display: none !important;
+            }
+            body {
+                background: #ffffff;
+                color: #000000;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Top Navigation -->
+    <header class="topbar">
+        <a class="logo" href="../index.html">
+            <span class="logo-icon" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+            <span>Cine<span>IT</span></span>
+        </a>
+        <div class="topbar-right">
+            <a href="../index.html">HOME</a>
+            <span class="topbar-dot"></span>
+            <a href="../cinemas/cinemas.html">CINEMAS</a>
+            <span class="topbar-dot"></span>
+            <a href="../index.html#now-showing">FILMS</a>
+            <span class="topbar-dot"></span>
+            <a href="../log-in/log-in.html" id="nav-auth-link">LOG IN / SIGN UP</a>
+            <button type="button" id="themeToggle" class="theme-toggle">☀️ Light Mode</button>
+        </div>
+    </header>
+
+    <main class="landing-main" style="gap: 32px;">
+        <div class="section-header" style="margin-bottom: 0;">
+            <h2>Booking Confirmed</h2>
+            <div class="section-line"></div>
+        </div>
+
+        <!-- Email Sent Notification Banner -->
+        <div class="email-banner">
+            <div class="email-banner-left">
+                <div class="check-circle">✓</div>
+                <div>
+                    <h3>E-Ticket Sent to <span id="sent-email-addr" style="color: var(--green);">your email</span></h3>
+                    <p>Check your inbox (or spam folder) for your official CineIT QR admission pass and receipt.</p>
+                </div>
+            </div>
+            <div class="banner-actions">
+                <button type="button" class="mini-btn" id="toggle-email-preview">📩 View Email Copy</button>
+                <button type="button" class="mini-btn" id="resend-email-btn">↻ Resend Email</button>
+            </div>
+        </div>
+
+        <!-- Expandable Email Copy Preview -->
+        <div class="email-preview-card" id="email-preview-card">
+            <div class="email-header-meta">
+                <div><strong>From:</strong> CineIT Tickets <tickets@cineit.ph></div>
+                <div><strong>To:</strong> <span id="preview-to"></span></div>
+                <div><strong>Subject:</strong> Your CineIT E-Ticket & Receipt — <span id="preview-subj"></span></div>
+            </div>
+            <div id="email-body-preview" style="font-size: 13px; line-height: 1.7;"></div>
+        </div>
+
+        <!-- Printable CineIT E-Ticket -->
+        <div class="ticket-wrapper" id="printable-ticket">
+            <div class="ticket-main">
+                <img id="tkt-poster" src="" alt="Movie Poster" class="ticket-poster">
+                <div style="flex: 1;">
+                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+                        <span style="padding:4px 10px;border-radius:6px;background:var(--green);color:#050705;font-size:10px;font-weight:800;letter-spacing:1px;">ADMIT <span id="tkt-seat-count">1</span></span>
+                        <span id="tkt-status" style="font-size:11px;font-weight:800;color:var(--green);">PAID</span>
+                    </div>
+                    <h2 id="tkt-movie" style="font-size: 26px; font-weight: 800; letter-spacing: -0.5px;">Movie Title</h2>
+                    <p id="tkt-info" style="font-size: 12px; color: var(--muted); font-weight: 600; margin-top: 2px;"></p>
+
+                    <div class="ticket-meta-grid">
+                        <div class="meta-block">
+                            <label>Cinema Branch</label>
+                            <span id="tkt-cinema">—</span>
+                        </div>
+                        <div class="meta-block">
+                            <label>Experience</label>
+                            <span id="tkt-format">—</span>
+                        </div>
+                        <div class="meta-block">
+                            <label>Date & Showtime</label>
+                            <span id="tkt-datetime">—</span>
+                        </div>
+                        <div class="meta-block">
+                            <label>Reserved Seats</label>
+                            <span id="tkt-seats" style="color: var(--green);">—</span>
+                        </div>
+                        <div class="meta-block">
+                            <label>Ticket Holder</label>
+                            <span id="tkt-holder">—</span>
+                        </div>
+                        <div class="meta-block">
+                            <label>Total Paid</label>
+                            <span id="tkt-total">—</span>
+                        </div>
+                    </div>
+
+                    <div id="tkt-snacks-box" style="margin-top: 14px; padding-top: 12px; border-top: 1px dashed var(--line); font-size: 12px; color: var(--muted);"></div>
+                </div>
+            </div>
+
+            <div class="ticket-stub">
+                <span style="font-size: 10px; font-weight: 800; letter-spacing: 2px; color: var(--muted);">SCAN AT ENTRANCE</span>
+                <div class="qr-box" id="qr-container"></div>
+                <div class="ref-code" id="tkt-ref">CIT-2026-000000</div>
+                <p style="font-size: 11px; color: var(--muted); max-width: 190px;">Present this QR code at the cinema lobby or snack counter.</p>
+            </div>
+        </div>
+
+        <!-- Bottom Action Buttons -->
+        <div class="ticket-actions">
+            <button type="button" class="secondary-btn" onclick="window.print()">🖨️ Print / Save PDF Ticket</button>
+            <a href="../index.html" class="primary" style="margin-top: 0; text-decoration: none; display: inline-flex; align-items: center;">Book Another Movie →</a>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../supabase-config.js"></script>
+    <script>
+        const themeToggle = document.getElementById("themeToggle");
+        let currentTheme = localStorage.getItem("cineit-theme") || "dark";
+        function applyTheme() {
+            document.documentElement.setAttribute("data-theme", currentTheme);
+            themeToggle.textContent = currentTheme === "dark" ? "☀️ Light Mode" : "🌙 Dark Mode";
+        }
+        applyTheme();
+        themeToggle.addEventListener("click", () => {
+            currentTheme = currentTheme === "dark" ? "light" : "dark";
+            localStorage.setItem("cineit-theme", currentTheme);
+            applyTheme();
+        });
+
+        if (window.cineitSupabase) {
+            window.cineitSupabase.auth.getSession().then(({ data }) => {
+                const user = data?.session?.user;
+                if (user) {
+                    const navLink = document.getElementById("nav-auth-link");
+                    navLink.textContent = (user.user_metadata?.full_name || user.email).toUpperCase();
+                    navLink.href = "../index.html";
+                }
+            });
+        }
+
+        const ticket = JSON.parse(sessionStorage.getItem("cineit_ticket") || "null");
+        if (!ticket) {
+            window.location.replace("../index.html");
+        }
+
+        const formatPHP = (n) => `₱${Number(n).toLocaleString("en-PH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+        document.getElementById("sent-email-addr").textContent = ticket.customerEmail;
+        document.getElementById("tkt-poster").src = ticket.moviePoster;
+        document.getElementById("tkt-seat-count").textContent = ticket.seats.length;
+        document.getElementById("tkt-status").textContent = `${ticket.paymentStatus} • ${ticket.paymentMethod}`;
+        document.getElementById("tkt-movie").textContent = ticket.movieTitle;
+        document.getElementById("tkt-info").textContent = ticket.movieInfo;
+        document.getElementById("tkt-cinema").textContent = ticket.cinema;
+        document.getElementById("tkt-format").textContent = ticket.format;
+        document.getElementById("tkt-datetime").textContent = `${ticket.date} • ${ticket.time}`;
+        document.getElementById("tkt-seats").textContent = ticket.seats.join(", ");
+        document.getElementById("tkt-holder").textContent = `${ticket.customerName} (${ticket.customerEmail})`;
+        document.getElementById("tkt-total").textContent = formatPHP(ticket.grandTotal);
+        document.getElementById("tkt-ref").textContent = ticket.bookingRef;
+
+        const snacksSummaryText = (Array.isArray(ticket.snacks) && ticket.snacks.length > 0)
+            ? ticket.snacks.map(s => `${s.qty}× ${s.name}`).join(", ")
+            : "No snack add-ons";
+
+        document.getElementById("tkt-snacks-box").innerHTML = `<strong style="color: var(--text);">Concessions Voucher:</strong> ${snacksSummaryText}`;
+
+        function renderDeterministicQR(seedText) {
+            const size = 21;
+            let hash = 2166136261;
+            for (let i = 0; i < seedText.length; i++) {
+                hash ^= seedText.charCodeAt(i);
+                hash = Math.imul(hash, 16777619);
+            }
+
+            const isFinder = (r, c) => {
+                const inTL = r < 7 && c < 7;
+                const inTR = r < 7 && c >= size - 7;
+                const inBL = r >= size - 7 && c < 7;
+                if (!inTL && !inTR && !inBL) return null;
+                const lr = inBL ? r - (size - 7) : r;
+                const lc = inTR ? c - (size - 7) : c;
+                if (lr === 0 || lr === 6 || lc === 0 || lc === 6) return true;
+                if (lr >= 2 && lr <= 4 && lc >= 2 && lc <= 4) return true;
+                return false;
+            };
+
+            let rects = "";
+            for (let r = 0; r < size; r++) {
+                for (let c = 0; c < size; c++) {
+                    const finder = isFinder(r, c);
+                    let dark = false;
+                    if (finder !== null) {
+                        dark = finder;
+                    } else {
+                        hash = (Math.imul(hash ^ (r * 31 + c), 1103515245) + 12345) >>> 0;
+                        dark = (hash & 1) === 1;
+                    }
+                    if (dark) {
+                        rects += `<rect x="${c * 6}" y="${r * 6}" width="6" height="6" fill="#050705"/>`;
+                    }
+                }
+            }
+            return `<svg width="126" height="126" viewBox="0 0 ${size * 6} ${size * 6}" xmlns="http://www.w3.org/2000/svg" aria-label="Ticket QR Code">${rects}</svg>`;
+        }
+
+        document.getElementById("qr-container").innerHTML = renderDeterministicQR(ticket.bookingRef);
+
+        document.getElementById("preview-to").textContent = `${ticket.customerName} <${ticket.customerEmail}>`;
+        document.getElementById("preview-subj").textContent = `${ticket.movieTitle} (${ticket.bookingRef})`;
+        document.getElementById("email-body-preview").innerHTML = `
+            <p>Hi <strong>${ticket.customerName}</strong>,</p>
+            <p style="margin-top: 8px;">Thank you for booking with <strong>CineIT</strong>! Your cinema seats and concessions order are confirmed.</p>
+            <div style="margin: 14px 0; padding: 14px; border-radius: 10px; background: var(--secondary-bg); border: 1px solid var(--line);">
+                <div><strong>Booking Reference:</strong> ${ticket.bookingRef}</div>
+                <div><strong>Movie:</strong> ${ticket.movieTitle} (${ticket.format})</div>
+                <div><strong>Cinema:</strong> ${ticket.cinema}</div>
+                <div><strong>Schedule:</strong> ${ticket.date} at ${ticket.time}</div>
+                <div><strong>Seats:</strong> ${ticket.seats.join(", ")}</div>
+                <div><strong>Snacks:</strong> ${snacksSummaryText}</div>
+                <div><strong>Total Paid:</strong> ${formatPHP(ticket.grandTotal)} (${ticket.paymentMethod})</div>
+            </div>
+            <p>Show your QR code from this email or your CineIT E-Ticket page at the cinema entrance. Enjoy the show!</p>
+        `;
+
+        const previewCard = document.getElementById("email-preview-card");
+        document.getElementById("toggle-email-preview").addEventListener("click", () => {
+            previewCard.classList.toggle("open");
+        });
+
+        const resendBtn = document.getElementById("resend-email-btn");
+        resendBtn.addEventListener("click", () => {
+            resendBtn.disabled = true;
+            resendBtn.textContent = "Sending...";
+            setTimeout(() => {
+                resendBtn.textContent = "✓ Sent Again!";
+                setTimeout(() => {
+                    resendBtn.disabled = false;
+                    resendBtn.textContent = "↻ Resend Email";
+                }, 2000);
+            }, 600);
+        });
+    </script>
+</body>
+</html>

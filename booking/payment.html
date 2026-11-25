@@ -233,7 +233,7 @@
 
                 <form id="payment-form" class="auth-form active" novalidate>
                     <div>
-                        <div class="email-badge">Demo checkout - No actual email or payment</div>
+                        <div class="email-badge">Checkout Information</div>
                         <div class="form-grid-2" style="margin-top: 8px;">
                             <div class="field">
                                 <label for="cust-name">Full Name</label>
@@ -255,13 +255,37 @@
                         </div>
 
                         <!-- Panel 1: E-Wallet -->
-                        <div class="pay-panel active" id="panel-ewallet">Demo e-wallet payment. No money will be collected.</div>
+                        <div class="pay-panel active" id="panel-ewallet">
+                            <div style="font-size: 12px; color: var(--muted);">E-wallet payment</div>
+                            <div class="field">
+                                <label for="demo-ewallet-num">Mobile Number</label>
+                                <input type="text" id="demo-ewallet-num" placeholder="(0917 123 4567)" value="">
+                            </div>
+                        </div>
 
                         <!-- Panel 2: Card -->
-                        <div class="pay-panel" id="panel-card">Demo card payment. No card details are required.</div>
+                        <div class="pay-panel" id="panel-card">
+                            <div style="font-size: 12px; color: var(--muted);">Demo card payment. No real charges will be made.</div>
+                            <div class="form-grid-2">
+                                <div class="field">
+                                    <label for="demo-card-num">Card Number (Demo)</label>
+                                    <input type="text" id="demo-card-num" placeholder="4111 •••• •••• 1111" value="4111 2222 3333 4444">
+                                </div>
+                                <div class="field">
+                                    <label for="demo-card-exp">Expiry / CVC (Demo)</label>
+                                    <input type="text" id="demo-card-exp" placeholder="12/28 • 123" value="12/28 • 123">
+                                </div>
+                            </div>
+                        </div>
 
                         <!-- Panel 3: Counter -->
-                        <div class="pay-panel" id="panel-counter">Demo counter payment. No actual seats will be reserved.</div>
+                        <div class="pay-panel" id="panel-counter">
+                            <div style="font-size: 12px; color: var(--muted);">Demo counter payment. Present your booking reference at the cinema.</div>
+                            <div class="field">
+                                <label for="demo-counter-note">Reservation Note (Optional)</label>
+                                <input type="text" id="demo-counter-note" placeholder="e.g., Paying 30 mins before showtime">
+                            </div>
+                        </div>
                     </div>
 
                     <div id="payment-error" class="form-error" role="alert"></div>
@@ -278,7 +302,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../supabase-config.js"></script>
-    <script src="checkout-api.js"></script>
     <script>
         const themeToggle = document.getElementById("themeToggle");
         let currentTheme = localStorage.getItem("cineit-theme") || "dark";
@@ -365,24 +388,7 @@
             });
         });
 
-        // PHP demo checkout integration
-
-        document.getElementById("panel-ewallet").textContent =
-            "Demo e-wallet payment. No money will be collected.";
-
-        document.getElementById("panel-card").textContent =
-            "Demo card payment. No card details are required.";
-
-        document.getElementById("panel-counter").textContent =
-            "Demo counter payment. No actual seats will be reserved.";
-
-        document.querySelector(".email-badge").textContent =
-            "Demo checkout - No actual email or payment";
-
-        document.getElementById("pay-submit-btn").textContent =
-            "Generate Demo Ticket";
-
-        document.getElementById("payment-form").addEventListener("submit", async (e) => {
+        document.getElementById("payment-form").addEventListener("submit", (e) => {
             e.preventDefault();
 
             const errorBox = document.getElementById("payment-error");
@@ -406,50 +412,47 @@
             }
 
             submitBtn.disabled = true;
-            submitBtn.textContent = "Validating booking...";
+            submitBtn.textContent = "Generating Demo Ticket...";
 
-            try {
-                const finalizedTicket = await submitPHPCheckout(
-                    booking,
-                    {
-                        name: custName,
-                        email: custEmail,
-                        paymentMethod: selectedMethod
-                    }
-                );
+            const randomCode = "CINE-" + Math.random().toString(36).substring(2, 8).toUpperCase();
 
-                finalizedTicket.demo = true;
-                finalizedTicket.emailStatus = "not_sent";
+            const finalizedTicket = {
+                ...booking,
+                bookingId: randomCode,
+                referenceNumber: randomCode,
+                ticketCode: randomCode,
+                customerName: custName,
+                customerEmail: custEmail,
+                paymentMethod: selectedMethod,
+                bookingFee: bookingFee,
+                totalAmount: grandTotal,
+                grandTotal: grandTotal,
+                status: "CONFIRMED (DEMO)",
+                issuedAt: new Date().toISOString(),
+                demo: true,
+                emailStatus: "not_sent"
+            };
 
-                sessionStorage.setItem(
-                    "cineit_ticket",
-                    JSON.stringify(finalizedTicket)
-                );
+            sessionStorage.setItem(
+                "cineit_ticket",
+                JSON.stringify(finalizedTicket)
+            );
 
-                const history = JSON.parse(
-                    localStorage.getItem("cineit_booking_history") || "[]"
-                );
+            const history = JSON.parse(
+                localStorage.getItem("cineit_booking_history") || "[]"
+            );
 
-                history.unshift(finalizedTicket);
+            history.unshift(finalizedTicket);
 
-                localStorage.setItem(
-                    "cineit_booking_history",
-                    JSON.stringify(history.slice(0, 20))
-                );
+            localStorage.setItem(
+                "cineit_booking_history",
+                JSON.stringify(history.slice(0, 20))
+            );
 
+            setTimeout(() => {
                 window.location.href = "ticket.html";
-
-            } catch (err) {
-                errorBox.textContent =
-                    err.message || "Unable to connect to PHP.";
-
-                errorBox.classList.add("show");
-
-                submitBtn.disabled = false;
-                submitBtn.textContent = "Generate Demo Ticket";
-            }
+            }, 400);
         });
-
     </script>
 </body>
 </html>
